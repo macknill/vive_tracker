@@ -16,98 +16,119 @@ void init_gpio(void)
     
   
   //TIM1_input_config
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
   GPIO_Init(GPIOA, &GPIO_InitStructure);
-  GPIO_WriteBit(GPIOA, GPIO_Pin_15, 0);
 }
 
 #define TIM2_CCR1_Address    ((u32)0x40000000+0x34)
-#define DMA_BUFF_SIZE 				2				
+#define DMA_BUFF_SIZE 				10				
 
 uint16_t buff[DMA_BUFF_SIZE];//Буфер
 uint16_t volatile T;
+
+void DMA1_Channel7_IRQHandler (void) 
+{
+  T = (buff[1] > buff[0]) ? (buff[1] - buff[0]) : (65535+ buff[1] - buff[0]);
+	
+  DMA1->IFCR |= DMA_IFCR_CGIF7;
+}
 
 void DMA1_Channel5_IRQHandler (void) 
 {
   T = (buff[1] > buff[0]) ? (buff[1] - buff[0]) : (65535+ buff[1] - buff[0]);
 	
-  DMA1->IFCR |= DMA_IFCR_CGIF1;
+  DMA1->IFCR |= DMA_IFCR_CGIF7;
 }
 
+uint32_t array[50];
+uint16_t array_cnt = 0;
+uint32_t old = 0;
 uint32_t temp = 0;
 void TIM2_IRQHandler(void)
 {
-  temp++;
-  //TIM_ITConfig(TIM2, TIM_IT_Update, DISABLE);
-  //USART_ITConfig(USART1, USART_IT_RXNE, DISABLE); 
-  //mb.flag |= 1;  
-  //led_toggle();
+  TIM_ClearITPendingBit(TIM2, TIM_IT_CC2);
+  if (array_cnt < 50)
+  {
+    array[array_cnt] = TIM2->CCR2;
+    array_cnt++;
+    array[array_cnt] = TIM2->CCR1;
+    /*uint32_t now = TIM2->CCR1;
+    if (now < old) 
+      array[array_cnt] = now + 0xFFFF - old;
+    else
+      array[array_cnt] = now - old;
+    old = now;*/
+    array_cnt++;
+  }
+  else
+  {
+    temp++;
+  }
 }
 
 void init_tim1_dma(void)
 {  
   DMA_InitTypeDef DMA_InitStructure;
-  
+  /*
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
-  /*DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&(TIM2->CCR1);
+  DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&(TIM2->CCR1);
   DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)buff;
   DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
-  DMA_InitStructure.DMA_BufferSize = DMA_BUFF_SIZE;
+  DMA_InitStructure.DMA_BufferSize = DMA_BUFF_SIZE*2;
   DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
   DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
-  DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
-  DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
+  DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;
+  DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Word;
   DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
   DMA_InitStructure.DMA_Priority = DMA_Priority_VeryHigh;
   DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
   DMA_Init(DMA1_Channel5, &DMA_InitStructure);
-  DMA_ITConfig(DMA1_Channel5, DMA_IT_TE, ENABLE);
-  */
-  
-  RCC->AHBENR |= TIM2_CCR1_Address; //Разрешаем тактирование первого DMA модуля
-  DMA1_Channel5->CPAR = TIM2_CCR1_Address; //Указываем адрес периферии - регистр результата преобразования АЦП для регулярных каналов
+  DMA_ITConfig(DMA1_Channel7, DMA_IT_TE, ENABLE);*/
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);//Разрешаем тактирование первого DMA модуля
+  DMA1_Channel5->CPAR = (uint32_t)&(TIM2->CCR1); //Указываем адрес периферии - регистр результата преобразования АЦП для регулярных каналов
   DMA1_Channel5->CMAR = (uint32_t)buff; //Задаем адрес памяти - базовый адрес массива в RAM
   DMA1_Channel5->CCR &= ~DMA_CCR1_DIR; //Указываем направление передачи данных, из периферии в память
-  DMA1_Channel5->CNDTR = DMA_BUFF_SIZE; //Количество пересылаемых значений
+  DMA1_Channel5->CNDTR = DMA_BUFF_SIZE*2; //Количество пересылаемых значений
   DMA1_Channel5->CCR &= ~DMA_CCR1_PINC; //Адрес периферии не инкрементируем после каждой пересылки
   DMA1_Channel5->CCR |= DMA_CCR1_MINC; //Адрес памяти инкрементируем после каждой пересылки.
-  DMA1_Channel5->CCR |= DMA_CCR1_PSIZE_0; //Размерность данных периферии - 16 бит
-  DMA1_Channel5->CCR |= DMA_CCR1_MSIZE_0; //Размерность данных памяти - 16 бит
+  DMA1_Channel5->CCR |= DMA_CCR1_PSIZE_1; //Размерность данных периферии - 16 бит
+  DMA1_Channel5->CCR |= DMA_CCR1_MSIZE_1; //Размерность данных памяти - 16 бит
   DMA1_Channel5->CCR |= DMA_CCR1_PL; //Приоритет - очень высокий 
   DMA1_Channel5->CCR |= DMA_CCR1_CIRC; //Разрешаем работу DMA в циклическом режиме
   DMA1_Channel5->CCR |= DMA_CCR1_TCIE;//Разрешаем прерывание по окончанию передачи
   DMA1_Channel5->CCR |= DMA_CCR1_EN; //Разрешаем работу 1-го канала DMA
+  
+  
   //включаем тактирование порта А, альтернативных функций и таймера
   RCC->APB2ENR |= RCC_APB2ENR_IOPAEN | RCC_APB2ENR_AFIOEN;
   RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; 
-	
-  TIM2->PSC = 56000-1;//новая частота 1Khz
-
-  TIM2->CCMR1 |= TIM_CCMR1_CC1S_0;//выбираем TI1 для TIM2_CH1
-  TIM2->CCMR1 &= ~(TIM_CCMR1_IC1F | TIM_CCMR1_IC1PSC);//не фильтруем и делитель не используем
-	
-  TIM2->CCER &= ~TIM_CCER_CC1P;//выбираем захват по переднему фронту
-  TIM2->CCER |= TIM_CCER_CC1E;//включаем режим захвата для 4-го канала         
-
-  TIM2->DIER |= TIM_DIER_CC1DE;//разрешаем формировать запрос к DMA
-	
-  TIM2->CR1 |= TIM_CR1_CEN; //включаем счётчик
   
-  NVIC_InitTypeDef NVIC_InitStructure;
+  TIM_TimeBaseInitTypeDef timer_base;
+  TIM_TimeBaseStructInit(&timer_base);
+  timer_base.TIM_Prescaler = 14;
+  TIM_TimeBaseInit(TIM2, &timer_base);
   
-  NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-/*
-  NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel5_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);*/
+  TIM_DMACmd(TIM2,TIM_DMA_CC1,ENABLE);
+  
+  TIM_ICInitTypeDef  TIM_ICInitStructure;
+  TIM_ICInitStructure.TIM_Channel = TIM_Channel_2;
+  TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
+  TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
+  TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+  TIM_ICInitStructure.TIM_ICFilter = 0x0;
+
+  TIM_PWMIConfig(TIM2, &TIM_ICInitStructure);
+  TIM_SelectInputTrigger(TIM2, TIM_TS_TI2FP2);
+  TIM_SelectSlaveMode(TIM2, TIM_SlaveMode_Reset);
+  TIM_SelectMasterSlaveMode(TIM2, TIM_MasterSlaveMode_Enable);
+  TIM_Cmd(TIM2, ENABLE);
+  //TIM_ITConfig(TIM2, TIM_IT_CC2, ENABLE);
+
+  TIM_Cmd(TIM2, ENABLE);
+  //NVIC_EnableIRQ(TIM2_IRQn);
+  NVIC_EnableIRQ(DMA1_Channel5_IRQn);
 }
 
 
