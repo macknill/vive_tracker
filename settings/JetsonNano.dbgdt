@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Project>
+  <Desktop>
+    <Static>
+      <Debug-Log>
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1221</ColumnWidth1></Debug-Log>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>915</ColumnWidth1><ColumnWidth2>244</ColumnWidth2><ColumnWidth3>61</ColumnWidth3></Build>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>181</Column0><Column1>5</Column1><Column2>27</Column2><Column3>0</Column3></ColumnWidths>
+      </Workspace>
+      <Disassembly>
+        <col-names>
+          <item>Disassembly</item>
+          <item>_I0</item>
+        </col-names>
+        <col-widths>
+          <item>500</item>
+          <item>20</item>
+        </col-widths>
+        <DisasmHistory/>
+        <PreferedWindows>
+          <Position>2</Position>
+          <ScreenPosX>0</ScreenPosX>
+          <ScreenPosY>0</ScreenPosY>
+          <Windows/>
+        </PreferedWindows>
+        <ShowCodeCoverage>1</ShowCodeCoverage>
+        <ShowInstrProfiling>1</ShowInstrProfiling>
+      </Disassembly>
+      <WATCH_1>
+        <expressions>
+          
+          
+          
+        <item>u8add</item><item>u16val</item><item>adc_data</item><item>board_va.Wh_all</item><item>led_ws2812</item><item/></expressions>
+        <col-names>
+          
+          
+          
+          
+        <item>Expression</item><item>Location</item><item>Type</item><item>Value</item></col-names>
+        <col-widths>
+          
+          
+          
+          
+        <item>174</item><item>150</item><item>100</item><item>166</item></col-widths>
+      </WATCH_1>
+      <Select-Ambiguous-Definitions>
+        
+        
+        
+      <ColumnWidth0>440</ColumnWidth0><ColumnWidth1>62</ColumnWidth1><ColumnWidth2>754</ColumnWidth2></Select-Ambiguous-Definitions>
+      <Register/>
+    <Find-in-Files><ColumnWidth0>445</ColumnWidth0><ColumnWidth1>63</ColumnWidth1><ColumnWidth2>763</ColumnWidth2></Find-in-Files></Static>
+    <Windows>
+      
+      
+      
+      
+    <Wnd3>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-12538-994</Identity>
+            <TabName>Debug Log</TabName>
+            <Factory>Debug-Log</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-12016-1004</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-234-12242</Identity>
+            <TabName>Ambiguous Definitions</TabName>
+            <Factory>Select-Ambiguous-Definitions</Factory>
+            <Session/>
+          </Tab>
+        <Tab><Identity>TabID-8099-8079</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab><Tab>
+            <Identity>TabID-6265-1112</Identity>
+            <TabName>Watch 1</TabName>
+            <Factory>WATCH_1</Factory>
+          </Tab></Tabs>
+        
+      <SelectedTab>4</SelectedTab></Wnd3><Wnd4>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-23287-997</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>JetsonNano</ExpandedNode><ExpandedNode>JetsonNano/Libraries</ExpandedNode><ExpandedNode>JetsonNano/Libraries/CMSIS</ExpandedNode><ExpandedNode>JetsonNano/Libraries/CMSIS/h</ExpandedNode><ExpandedNode>JetsonNano/Sources</ExpandedNode><ExpandedNode>JetsonNano/Sources/user</ExpandedNode><ExpandedNode>JetsonNano/StandartPeripheralLibrary</ExpandedNode><ExpandedNode>JetsonNano/StandartPeripheralLibrary/c</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd4><Wnd5><Tabs><Tab>
+            <Identity>TabID-11401-13260</Identity>
+            <TabName>Register</TabName>
+            <Factory>Register</Factory>
+            <Session>
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+            <State26>TIM3_PSC</State26><State27>TIM4_CR1</State27><REG1>0</REG1><REG2>0</REG2><Group>20</Group><States>26</States><State0>ADC1_CR1</State0><State1>ADC1_CR2</State1><State2>ADC1_SMPR2</State2><State3>ADC1_SQR3</State3><State4>ADC1_SR</State4><State5>DMA_CCR2</State5><State6>DMA_CNDTR1</State6><State7>DMA_CNDTR2</State7><State8>GPIOB_CRL</State8><State9>GPIOB_ODR</State9><State10>GPIOC_ODR</State10><State11>RCC_APB1ENR</State11><State12>RCC_APB2ENR</State12><State13>RCC_CFGR</State13><State14>RCC_CR</State14><State15>RCC_CSR</State15><State16>TIM1_CR1</State16><State17>TIM1_CR2</State17><State18>TIM1_DIER</State18><State19>TIM1_EGR</State19><State20>TIM1_SR</State20><State21>TIM2_CR1</State21><State22>TIM3_CCER</State22><State23>TIM3_DMAR</State23><State24>TIM3_PSC</State24><State25>TIM4_CR1</State25></Session>
+          </Tab></Tabs><SelectedTab>0</SelectedTab></Wnd5></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Sources\user\ws2812.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>32</SelStart2><SelEnd2>32</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\CMSIS\CM3\DeviceSupport\ST\STM32F10x\stm32f10x.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>3565</YPos2><SelStart2>0</SelStart2><SelEnd2>0</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\STM32F10x_StdPeriph_Driver\inc\stm32f10x_dma.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>90</YPos2><SelStart2>0</SelStart2><SelEnd2>0</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\STM32F10x_StdPeriph_Driver\src\stm32f10x_iwdg.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>122</YPos2><SelStart2>3841</SelStart2><SelEnd2>3841</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Sources\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>69</YPos2><SelStart2>3580</SelStart2><SelEnd2>3580</SelEnd2></Tab><ActiveTab>4</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Sources\user\inits.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>286</YPos2><SelStart2>12209</SelStart2><SelEnd2>12209</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\STM32F10x_StdPeriph_Driver\src\stm32f10x_dma.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>422</YPos2><SelStart2>21487</SelStart2><SelEnd2>21487</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Sources\stm32f10x_it.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>84</YPos2><SelStart2>2959</SelStart2><SelEnd2>2959</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\STM32F10x_StdPeriph_Driver\src\stm32f10x_tim.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>889</YPos2><SelStart2>33274</SelStart2><SelEnd2>33274</SelEnd2></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-052e9c48><key>iaridepm.enu1</key></Toolbar-052e9c48></Sizes></Row0><Row1><Sizes><Toolbar-1a84bf08><key>debuggergui.enu1</key></Toolbar-1a84bf08></Sizes></Row1><Row2><Sizes><Toolbar-16b40c60><key>armjlink.enu1</key></Toolbar-16b40c60></Sizes></Row2></Top><Left><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>651</Bottom><Right>250</Right><x>-2</x><y>-2</y><xscreen>176</xscreen><yscreen>375</yscreen><sizeHorzCX>145575</sizeHorzCX><sizeHorzCY>382263</sizeHorzCY><sizeVertCX>208437</sizeVertCX><sizeVertCY>665647</sizeVertCY></Rect></Wnd4></Sizes></Row0></Left><Right><Row0><Sizes><Wnd5><Rect><Top>-2</Top><Left>-2</Left><Bottom>651</Bottom><Right>354</Right><x>-2</x><y>-2</y><xscreen>177</xscreen><yscreen>367</yscreen><sizeHorzCX>146402</sizeHorzCX><sizeHorzCY>374108</sizeHorzCY><sizeVertCX>294458</sizeVertCX><sizeVertCY>665647</sizeVertCY></Rect></Wnd5></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>237</Bottom><Right>1211</Right><x>-2</x><y>-2</y><xscreen>1213</xscreen><yscreen>239</yscreen><sizeHorzCX>1003309</sizeHorzCX><sizeHorzCY>243629</sizeHorzCY><sizeVertCX>145575</sizeVertCX><sizeVertCY>382263</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Project>
+
+
