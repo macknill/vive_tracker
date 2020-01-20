@@ -578,7 +578,7 @@
         </option>
         <option>
           <name>OOCOutputFile</name>
-          <state>JetsonNano.bin</state>
+          <state>vive_tracker_stm32f103.bin</state>
         </option>
         <option>
           <name>OOCCommandLineProducer</name>
@@ -1869,34 +1869,10 @@
     <group>
       <name>user</name>
       <file>
-        <name>$PROJ_DIR$\Sources\user\board.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\Sources\user\board.h</name>
-      </file>
-      <file>
         <name>$PROJ_DIR$\Sources\user\inits.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\Sources\user\inits.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\Sources\user\mbcrc.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\Sources\user\mbcrc.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\Sources\user\modbus.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\Sources\user\modbus.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\Sources\user\ws2812.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\Sources\user\ws2812.h</name>
       </file>
     </group>
     <file>
@@ -1904,9 +1880,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\Sources\main.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\Sources\mb_regs.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\Sources\stm32f10x_it.c</name>

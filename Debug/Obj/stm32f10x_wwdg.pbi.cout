@@ -1,18 +1,18 @@
-"D:\GitHub\vive-tracker-stm32f103\STM32F10x_StdPeriph_Driver\src\stm32f10x_wwdg.c"
+"D:\GitHub\vive_tracker_stm32f103\STM32F10x_StdPeriph_Driver\src\stm32f10x_wwdg.c"
 -std=c99
 -ferror-limit=100
 -I
-D:\GitHub\vive-tracker-stm32f103/CMSIS/CM3/DeviceSupport/ST/STM32F10x
+D:\GitHub\vive_tracker_stm32f103/CMSIS/CM3/DeviceSupport/ST/STM32F10x
 -I
-D:\GitHub\vive-tracker-stm32f103/CMSIS/CM3/DeviceSupport/ST/STM32F10x\startup\iar
+D:\GitHub\vive_tracker_stm32f103/CMSIS/CM3/DeviceSupport/ST/STM32F10x\startup\iar
 -I
-D:\GitHub\vive-tracker-stm32f103/STM32F10x_StdPeriph_Driver/inc
+D:\GitHub\vive_tracker_stm32f103/STM32F10x_StdPeriph_Driver/inc
 -I
-D:\GitHub\vive-tracker-stm32f103/
+D:\GitHub\vive_tracker_stm32f103/
 -I
-D:\GitHub\vive-tracker-stm32f103/Sources
+D:\GitHub\vive_tracker_stm32f103/Sources
 -I
-D:\GitHub\vive-tracker-stm32f103/Sources/user
+D:\GitHub\vive_tracker_stm32f103/Sources/user
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\arm\CMSIS\Include
 -I
@@ -20,17 +20,17 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\arm\inc\c
 -I
-D:\GitHub\vive-tracker-stm32f103\CMSIS\CM3\DeviceSupport\ST\STM32F10x
+D:\GitHub\vive_tracker_stm32f103\CMSIS\CM3\DeviceSupport\ST\STM32F10x
 -I
-D:\GitHub\vive-tracker-stm32f103\CMSIS\CM3\DeviceSupport\ST\STM32F10x\startup\iar
+D:\GitHub\vive_tracker_stm32f103\CMSIS\CM3\DeviceSupport\ST\STM32F10x\startup\iar
 -I
-D:\GitHub\vive-tracker-stm32f103\STM32F10x_StdPeriph_Driver\inc
+D:\GitHub\vive_tracker_stm32f103\STM32F10x_StdPeriph_Driver\inc
 -I
-D:\GitHub\vive-tracker-stm32f103
+D:\GitHub\vive_tracker_stm32f103
 -I
-D:\GitHub\vive-tracker-stm32f103\Sources
+D:\GitHub\vive_tracker_stm32f103\Sources
 -I
-D:\GitHub\vive-tracker-stm32f103\Sources\user
+D:\GitHub\vive_tracker_stm32f103\Sources\user
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\arm\CMSIS\Include
 -DSTM32F10X_MD=0
@@ -231,7 +231,7 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\arm\CMSIS\Include
 -D__HAS_LOCATED_WITH_INIT__=1
 -D__IAR_COMPILERBASE__=593160
 -D__DATE__="Jan 20 2020"
--D__TIME__="13:50:14"
+-D__TIME__="15:06:07"
 -D__STDC__=1
 -D__STDC_VERSION__=199901L
 -D__STDC_HOSTED__=1

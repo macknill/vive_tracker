@@ -23,10 +23,13 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_it.h"
-#include "modbus.h"
 #include "main.h"
-#include "mb_regs.h"
 
+void SysTick_Handler(void) {
+  ticks_delay++;
+}
+
+/*
 uint16_t temp_cnt[400];
 void USART1_IRQHandler(void)
 { 
@@ -43,16 +46,11 @@ void USART1_IRQHandler(void)
       TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
     }
 
-    /*if(RxCounter == NbrOfDataToRead)
-    {
-      USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);
-    }*/
   }  
   USART_ClearFlag(USART1, USART_IT_ORE);
   USART_ClearFlag(USART1, USART_IT_TXE);
   //led_toggle();
 }
-
 uint32_t temp_tim2 = 0;
 void TIM2_IRQHandler(void)
 {
@@ -128,7 +126,7 @@ void DMA1_Channel1_IRQHandler(void)
 void DMA1_Channel2_IRQHandler(void)
 {
   DMA_ClearFlag(DMA1_IT_TC1);     
-}
+}*/
 
 void NMI_Handler(void)
 {
