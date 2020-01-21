@@ -28,16 +28,18 @@
 volatile uint32_t ticks_delay = 0;
 void delay(uint32_t milliseconds);
 
+
+
 int main(void)
 {
   SystemInit();
   init_gpio();
   SysTick_Config(SystemCoreClock/1000);
-  init_tim1_dma();
+  init_signal_gpio_timers_dma();
   while (1)
   {
     IWDG_ReloadCounter(); 
-    //led_toggle();
+    led_toggle();
     delay(1000);
   }
 }
