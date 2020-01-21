@@ -37,7 +37,7 @@ int main(void)
   while (1)
   {
     IWDG_ReloadCounter(); 
-    led_toggle();
+    //led_toggle();
     delay(1000);
   }
 }

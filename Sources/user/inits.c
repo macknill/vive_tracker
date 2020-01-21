@@ -16,14 +16,14 @@ void init_gpio(void)
     
   
   //TIM1_input_config
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
   GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
 
 #define TIM2_CCR1_Address    ((u32)0x40000000+0x34)
-#define DMA_BUFF_SIZE 				10				
+#define DMA_BUFF_SIZE 				20				
 
 uint16_t buff[DMA_BUFF_SIZE];//Буфер
 uint16_t volatile T;
@@ -33,13 +33,13 @@ void DMA1_Channel7_IRQHandler (void)
   T = (buff[1] > buff[0]) ? (buff[1] - buff[0]) : (65535+ buff[1] - buff[0]);
 	
   DMA1->IFCR |= DMA_IFCR_CGIF7;
+  DMA_ClearFlag(DMA1_FLAG_GL5 | DMA1_FLAG_TC5 | DMA1_FLAG_HT5);
 }
 
 void DMA1_Channel5_IRQHandler (void) 
 {
   T = (buff[1] > buff[0]) ? (buff[1] - buff[0]) : (65535+ buff[1] - buff[0]);
-	
-  DMA1->IFCR |= DMA_IFCR_CGIF7;
+  DMA_ClearFlag(DMA1_FLAG_GL5 | DMA1_FLAG_TC5 | DMA1_FLAG_HT5);
 }
 
 uint32_t array[50];
@@ -48,6 +48,8 @@ uint32_t old = 0;
 uint32_t temp = 0;
 void TIM2_IRQHandler(void)
 {
+  
+  led_toggle();
   TIM_ClearITPendingBit(TIM2, TIM_IT_CC2);
   if (array_cnt < 50)
   {
@@ -87,14 +89,14 @@ void init_tim1_dma(void)
   DMA_Init(DMA1_Channel5, &DMA_InitStructure);
   DMA_ITConfig(DMA1_Channel7, DMA_IT_TE, ENABLE);*/
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);//Разрешаем тактирование первого DMA модуля
-  DMA1_Channel5->CPAR = (uint32_t)&(TIM2->CCR1); //Указываем адрес периферии - регистр результата преобразования АЦП для регулярных каналов
+  DMA1_Channel5->CPAR = (uint32_t)&(TIM2->DMAR); //Указываем адрес периферии - регистр результата преобразования АЦП для регулярных каналов
   DMA1_Channel5->CMAR = (uint32_t)buff; //Задаем адрес памяти - базовый адрес массива в RAM
   DMA1_Channel5->CCR &= ~DMA_CCR1_DIR; //Указываем направление передачи данных, из периферии в память
-  DMA1_Channel5->CNDTR = DMA_BUFF_SIZE*2; //Количество пересылаемых значений
+  DMA1_Channel5->CNDTR = DMA_BUFF_SIZE; //Количество пересылаемых значений
   DMA1_Channel5->CCR &= ~DMA_CCR1_PINC; //Адрес периферии не инкрементируем после каждой пересылки
   DMA1_Channel5->CCR |= DMA_CCR1_MINC; //Адрес памяти инкрементируем после каждой пересылки.
-  DMA1_Channel5->CCR |= DMA_CCR1_PSIZE_1; //Размерность данных периферии - 16 бит
-  DMA1_Channel5->CCR |= DMA_CCR1_MSIZE_1; //Размерность данных памяти - 16 бит
+  DMA1_Channel5->CCR |= DMA_CCR1_PSIZE_0; //Размерность данных периферии - 16 бит
+  DMA1_Channel5->CCR |= DMA_CCR1_MSIZE_0; //Размерность данных памяти - 16 бит
   DMA1_Channel5->CCR |= DMA_CCR1_PL; //Приоритет - очень высокий 
   DMA1_Channel5->CCR |= DMA_CCR1_CIRC; //Разрешаем работу DMA в циклическом режиме
   DMA1_Channel5->CCR |= DMA_CCR1_TCIE;//Разрешаем прерывание по окончанию передачи
@@ -114,7 +116,7 @@ void init_tim1_dma(void)
   
   TIM_ICInitTypeDef  TIM_ICInitStructure;
   TIM_ICInitStructure.TIM_Channel = TIM_Channel_2;
-  TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
+  TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Falling;
   TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
   TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
   TIM_ICInitStructure.TIM_ICFilter = 0x0;
@@ -124,10 +126,12 @@ void init_tim1_dma(void)
   TIM_SelectSlaveMode(TIM2, TIM_SlaveMode_Reset);
   TIM_SelectMasterSlaveMode(TIM2, TIM_MasterSlaveMode_Enable);
   TIM_Cmd(TIM2, ENABLE);
-  //TIM_ITConfig(TIM2, TIM_IT_CC2, ENABLE);
+  TIM_ITConfig(TIM2, TIM_IT_CC1, ENABLE);
+  
+  TIM2->DCR |= TIM_DCR_DBL_0 | 13; //читаем 2 регистра начиная с 13 CCR1 to CCR2
 
   TIM_Cmd(TIM2, ENABLE);
-  //NVIC_EnableIRQ(TIM2_IRQn);
+  NVIC_EnableIRQ(TIM2_IRQn);
   NVIC_EnableIRQ(DMA1_Channel5_IRQn);
 }
 
