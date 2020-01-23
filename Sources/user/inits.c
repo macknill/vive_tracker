@@ -1,5 +1,6 @@
 #include "stm32f10x.h"
 #include "main.h"
+#include "inits.h"
 
 
 void init_tim_dma(TIM_TypeDef* TIMx, DMA_Channel_TypeDef* DMAy_Channelx, uint16_t* tim_array, uint16_t array_lenght);
@@ -29,12 +30,12 @@ uint16_t array_cnt = 0;
 uint32_t old = 0;
 uint32_t temp = 0;
 
-void TIM3_IRQHandler(void)
+void TIM2_IRQHandler(void)
 {
   
   led_toggle();
-  TIM_ClearITPendingBit(TIM3, TIM_IT_CC1);
-  if (array_cnt < 50)
+  TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);
+  /*if (array_cnt < 50)
   {
     array[array_cnt] = TIM2->CCR2;
     array_cnt++;
@@ -44,18 +45,17 @@ void TIM3_IRQHandler(void)
       array[array_cnt] = now + 0xFFFF - old;
     else
       array[array_cnt] = now - old;
-    old = now;*/
+    old = now;//
     array_cnt++;
   }
   else
   {
     temp++;
-  }
+  }*/
 }
+			
 
-#define DMA_BUFF_SIZE 				60				
-
-uint16_t buff[DMA_BUFF_SIZE];//Αστεπ
+uint16_t ir_buffer[IR_CHANNELS][DMA_BUFF_SIZE];//Αστεπ
 
 void init_signal_gpio_timers_dma(void)
 { 
@@ -82,9 +82,12 @@ void init_signal_gpio_timers_dma(void)
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE); 
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE); 
   
-  init_tim_dma(TIM2, DMA1_Channel5, buff, DMA_BUFF_SIZE);
-  init_tim_dma(TIM3, DMA1_Channel6, buff, DMA_BUFF_SIZE);
-  init_tim_dma(TIM4, DMA1_Channel1, buff, DMA_BUFF_SIZE);
+  
+  init_tim_dma(TIM2, DMA_IR_CH1, ir_buffer[0], DMA_BUFF_SIZE);
+  init_tim_dma(TIM3, DMA_IR_CH2, ir_buffer[1], DMA_BUFF_SIZE);
+  init_tim_dma(TIM4, DMA_IR_CH3, ir_buffer[2], DMA_BUFF_SIZE);
+  TIM_ITConfig(TIM2, TIM_IT_CC1, ENABLE);
+  NVIC_EnableIRQ(TIM2_IRQn);
 }
 
 void init_tim_dma(TIM_TypeDef* TIMx, DMA_Channel_TypeDef* DMAy_Channelx, uint16_t* tim_array, uint16_t array_lenght)
@@ -105,7 +108,7 @@ void init_tim_dma(TIM_TypeDef* TIMx, DMA_Channel_TypeDef* DMAy_Channelx, uint16_
     
   TIM_TimeBaseInitTypeDef timer_base;
   TIM_TimeBaseStructInit(&timer_base);
-  timer_base.TIM_Prescaler = 14;
+  timer_base.TIM_Prescaler = 71;
   TIM_TimeBaseInit(TIMx, &timer_base);
   
   TIM_DMAConfig(TIMx, TIM_DMABase_CCR1, TIM_DMABurstLength_3Transfers);
@@ -128,19 +131,54 @@ void init_tim_dma(TIM_TypeDef* TIMx, DMA_Channel_TypeDef* DMAy_Channelx, uint16_
   //NVIC_EnableIRQ(DMA1_Channel5_IRQn);
 }
 
+uint8_t tx_buffer[TX_BUFFER_SIZE];
 
+void init_uart(void)
+{
+  GPIO_PinRemapConfig(GPIO_Remap_USART1, ENABLE);
+  
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+  GPIO_Init(GPIOB, &GPIO_InitStructure); 
+  
+  DMA_InitTypeDef DMA_InitStructure;
 
+  /* USARTy_Tx_DMA_Channel (triggered by USARTy Tx event) Config */
+  DMA_DeInit(DMA1_Channel4);
+  DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&(USART1->DR);
+  DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)tx_buffer;
+  DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;
+  DMA_InitStructure.DMA_BufferSize = TX_BUFFER_SIZE;
+  DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+  DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+  DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
+  DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
+  DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
+  DMA_InitStructure.DMA_Priority = DMA_Priority_Medium;
+  DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
+  DMA_Init(DMA1_Channel4, &DMA_InitStructure);
+  
+  
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE); 
+  USART_InitTypeDef USART_InitStructure;
+  USART_InitStructure.USART_BaudRate = 115200;
+  USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+  USART_InitStructure.USART_StopBits = USART_StopBits_1;
+  USART_InitStructure.USART_Parity = USART_Parity_No;
+  USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+  USART_InitStructure.USART_Mode = USART_Mode_Tx;
+  
+  /* Configure USARTy */
+  USART_Init(USART1, &USART_InitStructure);
+  /* Enable USARTy DMA TX request */
+  USART_DMACmd(USART1, USART_DMAReq_Tx, ENABLE);
+  /* Enable USARTy */
+  USART_Cmd(USART1, ENABLE);
 
-
-
-
-
-
-
-
-
-
-
-
+  /* Enable USARTy DMA TX Channel */
+  DMA_Cmd(DMA1_Channel4, ENABLE);
+}
 
 

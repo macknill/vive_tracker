@@ -36,11 +36,33 @@ int main(void)
   init_gpio();
   SysTick_Config(SystemCoreClock/1000);
   init_signal_gpio_timers_dma();
+  //init_uart();
+  
+  volatile uint16_t ch1_old_lenght = 0;
+  
   while (1)
   {
     IWDG_ReloadCounter(); 
-    led_toggle();
-    delay(1000);
+    //led_toggle();
+    //delay(100);
+    volatile uint16_t temp_lenght = DMA_IR_CH2->CNDTR;
+    /*if (temp_lenght != ch1_old_lenght)
+    {
+      if (ch1_old_lenght > temp_lenght)
+      {
+        tx_buffer[0] = temp_lenght + DMA_BUFF_SIZE -  ch1_old_lenght;
+      }
+      else
+        tx_buffer[0] = temp_lenght + DMA_BUFF_SIZE -  ch1_old_lenght;
+      ch1_old_lenght = temp_lenght;
+      //tx_buffer[1] = '\n';
+      DMA_Cmd(DMA1_Channel4, DISABLE);
+      DMA_SetCurrDataCounter(DMA1_Channel4, 1);
+      DMA_Cmd(DMA1_Channel4, ENABLE);
+    }
+    //DMA_Cmd(DMA1_Channel4, DISABLE);
+    //DMA_SetCurrDataCounter(DMA1_Channel4, 50);
+    //DMA_Cmd(DMA1_Channel4, ENABLE);*/
   }
 }
 
