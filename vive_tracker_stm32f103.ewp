@@ -1874,6 +1874,12 @@
       <file>
         <name>$PROJ_DIR$\Sources\user\inits.h</name>
       </file>
+      <file>
+        <name>$PROJ_DIR$\Sources\scan.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Sources\scan.h</name>
+      </file>
     </group>
     <file>
       <name>$PROJ_DIR$\Sources\main.c</name>

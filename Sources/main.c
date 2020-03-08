@@ -23,12 +23,21 @@
 #include "stm32f10x.h"
 #include "inits.h"
 #include "main.h"
+#include "scan.h"
 
     
 volatile uint32_t ticks_delay = 0;
+volatile uint32_t tick_ms = 0;
 void delay(uint32_t milliseconds);
 
 
+
+union package_union {
+uint16_t two;
+uint8_t one[2];
+};
+
+union package_union uart_package[9];
 
 int main(void)
 {
@@ -36,38 +45,69 @@ int main(void)
   init_gpio();
   SysTick_Config(SystemCoreClock/1000);
   init_signal_gpio_timers_dma();
-  //init_uart();
+  init_uart();
   
   volatile uint16_t ch1_old_lenght = 0;
   
+  uart_package[0].two = 0xAAAA;
+  uart_package[1].one[0] = 0x02;
+  uart_package[1].one[1] = 0x2A;
+  uart_package[2].two = 8000;
+  uart_package[3].two = 6000;
+  uart_package[4].two = 7000;
+  uart_package[5].two = 0123;
+  uart_package[6].two = 4567;
+  uart_package[7].two = 8910;
+  uart_package[8].two = 0x5555;
+  
+  sensor[0].dma = DMA_IR_CH1;
+  sensor[1].dma = DMA_IR_CH2;
+  sensor[2].dma = DMA_IR_CH3;
   while (1)
   {
     IWDG_ReloadCounter(); 
     //led_toggle();
-    //delay(100);
+    /*delay(100);
     volatile uint16_t temp_lenght = DMA_IR_CH2->CNDTR;
-    /*if (temp_lenght != ch1_old_lenght)
+    for(uint32_t j = 0; j < 9; j++)
     {
-      if (ch1_old_lenght > temp_lenght)
-      {
-        tx_buffer[0] = temp_lenght + DMA_BUFF_SIZE -  ch1_old_lenght;
-      }
-      else
-        tx_buffer[0] = temp_lenght + DMA_BUFF_SIZE -  ch1_old_lenght;
-      ch1_old_lenght = temp_lenght;
-      //tx_buffer[1] = '\n';
-      DMA_Cmd(DMA1_Channel4, DISABLE);
-      DMA_SetCurrDataCounter(DMA1_Channel4, 1);
-      DMA_Cmd(DMA1_Channel4, ENABLE);
+      tx_buffer[j*2] = uart_package[j].one[0];
+      tx_buffer[j*2 + 1] = uart_package[j].one[1];
     }
-    //DMA_Cmd(DMA1_Channel4, DISABLE);
-    //DMA_SetCurrDataCounter(DMA1_Channel4, 50);
-    //DMA_Cmd(DMA1_Channel4, ENABLE);*/
+    DMA_Cmd(DMA1_Channel4, DISABLE);
+    DMA_SetCurrDataCounter(DMA1_Channel4, 18);
+    DMA_Cmd(DMA1_Channel4, ENABLE);
+    */
+    for (uint8_t ch = 0; ch < IR_CHANNELS; ch++)
+    {
+      if (sensor[ch].irCnt != DMA_GetCurrDataCounter(sensor[ch].dma))
+      {
+        uint16_t addr = DMA_GetCurrDataCounter(sensor[ch].dma);
+        if(addr < DMA_BUFF_SIZE)
+        if (ir_buffer[ch][addr] == 0)
+        {
+          ir_buffer[ch][addr] == 1;
+          if (addr == 0)
+            set_imp(tick_ms, ch, ir_buffer[ch][DMA_BUFF_SIZE - 1], ir_buffer[ch][DMA_BUFF_SIZE - 2]);
+          else if (addr < 1)
+            set_imp(tick_ms, ch, ir_buffer[ch][addr - 1], ir_buffer[ch][DMA_BUFF_SIZE - 1]);
+          else
+            set_imp(tick_ms, ch, ir_buffer[ch][addr - 1], ir_buffer[ch][addr - 2]);
+          if (scan(ch, &sensor[ch].time, &sensor[ch].irBase, &sensor[ch].irLenght))
+          {
+            uint8_t temp = 0;
+          }
+        }
+      }
+    }
+    //
+    //if (dma_cnt) 
+    //scan(0);
   }
 }
 
 void delay(uint32_t milliseconds) {
-  uint32_t start = ticks_delay;
+  uint64_t start = ticks_delay;
   while((ticks_delay - start) < milliseconds);
 }
 

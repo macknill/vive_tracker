@@ -27,6 +27,7 @@
 
 void SysTick_Handler(void) {
   ticks_delay++;
+  tick_ms++;
 }
 
 /*

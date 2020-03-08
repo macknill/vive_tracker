@@ -62,15 +62,15 @@ void init_signal_gpio_timers_dma(void)
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE); 
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE); 
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);  
-  //TIM2__CH1(PA2), TIM3__CH1(PA7) input_config
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_7;
+  //TIM2__CH2(PA1), TIM3__CH2(PA7) input_config
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_7;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
   GPIO_Init(GPIOA, &GPIO_InitStructure);
-  //TIM4__CH1(PB7) input_config;  
+  //TIM4__CH2(PB7) input_config;  
   GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_7;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
   GPIO_Init(GPIOB, &GPIO_InitStructure);
   
   //GPIO_PinRemapConfig(GPIO_FullRemap_TIM3, ENABLE);
@@ -92,7 +92,6 @@ void init_signal_gpio_timers_dma(void)
 
 void init_tim_dma(TIM_TypeDef* TIMx, DMA_Channel_TypeDef* DMAy_Channelx, uint16_t* tim_array, uint16_t array_lenght)
 {  
-  DMA_InitTypeDef DMA_InitStructure;
   DMAy_Channelx->CPAR = (uint32_t)&(TIMx->DMAR); //Указываем адрес периферии - регистр результата преобразования АЦП для регулярных каналов
   DMAy_Channelx->CMAR = (uint32_t)tim_array; //Задаем адрес памяти - базовый адрес массива в RAM
   DMAy_Channelx->CCR &= ~DMA_CCR1_DIR; //Указываем направление передачи данных, из периферии в память
@@ -116,12 +115,12 @@ void init_tim_dma(TIM_TypeDef* TIMx, DMA_Channel_TypeDef* DMAy_Channelx, uint16_
   
   TIM_ICInitTypeDef  TIM_ICInitStructure;
   TIM_ICInitStructure.TIM_Channel = TIM_Channel_2;
-  TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Falling;
+  TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
   TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
   TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
   TIM_ICInitStructure.TIM_ICFilter = 0x0;
-
   TIM_PWMIConfig(TIMx, &TIM_ICInitStructure);
+  
   TIM_SelectInputTrigger(TIMx, TIM_TS_TI2FP2);
   TIM_SelectSlaveMode(TIMx, TIM_SlaveMode_Reset);
   TIM_SelectMasterSlaveMode(TIMx, TIM_MasterSlaveMode_Enable);
